@@ -1,0 +1,12 @@
+{
+  "accounts": [
+    {
+      "name": "账号A",
+      "token": "你的accessToken"
+    },
+    {
+      "name": "账号B",
+      "token": "另一个账号的accessToken"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+name: WorkBuddy 每日签到
+
+on:
+  schedule:
+    # 每天 08:00（UTC+8）= 00:00 UTC，GitHub Actions 的 cron 使用 UTC 时间
+    - cron: "0 0 * * *"
+  workflow_dispatch: {} # 支持在 Actions 页面手动触发
+
+# 防止上一次运行还没结束就叠跑（重复签到无收益）
+concurrency:
+  group: workbuddy-checkin
+  cancel-in-progress: false
+
+jobs:
+  checkin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+
+      - name: 执行每日签到
+        env:
+          # 多账号：base64(JSON 数组)，在仓库 Settings → Secrets 中配置
+          # 格式示例: [{"name":"账号A","token":"xxx"},{"name":"账号B","token":"yyy"}]
+          WORKBUDDY_ACCOUNTS_B64: ${{ secrets.WORKBUDDY_ACCOUNTS_B64 }}
+          # 如需切换接口域名，可加一行: WORKBUDDY_API_BASE: ${{ secrets.WORKBUDDY_API_BASE }}
+          TZ: Asia/Shanghai # 日志使用北京时间
+        run: python checkin.py
+
+      - name: 失败时输出日志摘要
+        if: failure()
+        run: |
+          echo "::warning::WorkBuddy 签到运行失败，请检查上方日志（多为 Token 过期，需重新获取并更新 Secret）"

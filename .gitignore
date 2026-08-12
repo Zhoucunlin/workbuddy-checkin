@@ -1,0 +1,15 @@
+# 本地账号配置（含敏感 Token，严禁提交）
+config.json
+
+# 日志
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 编辑器
+.idea/
+.vscode/
