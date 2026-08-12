@@ -1,5 +1,7 @@
 # 本地账号配置（含敏感 Token，严禁提交）
 config.json
+# 用于粘贴到 GitHub Secret 的密钥内容（同样敏感）
+secret_value.txt
 
 # 日志
 *.log
