@@ -2,8 +2,12 @@ name: WorkBuddy 每日签到
 
 on:
   schedule:
-    # 每天 08:00（UTC+8）= 00:00 UTC，GitHub Actions 的 cron 使用 UTC 时间
+     # 每天 4 次尝试：UTC 23/0/1/2 = 北京 7/8/9/10 点
+    # 脚本内置幂等保护（重复签到自动跳过），多跑无副作用
+    - cron: "0 23 * * *"
     - cron: "0 0 * * *"
+    - cron: "0 1 * * *"
+    - cron: "0 2 * * *"
   workflow_dispatch: {} # 支持在 Actions 页面手动触发
 
 # 防止上一次运行还没结束就叠跑（重复签到无收益）
